@@ -10,16 +10,16 @@ router.get('/', (req, res) => {
     include: [
       {
         model: Product,
-        attributes: ['product_name', 'price', 'stock', 'category_id'],
+        through: ProductTag,
       },
     ],
   })
-    .then((tags) => {
-      res.json(tags);
+    .then((tagData) => {
+      res.json(tagData);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -33,28 +33,30 @@ router.get('/:id', (req, res) => {
     include: [
       {
         model: Product,
-        attributes: ['product_name', 'price', 'stock', 'category_id'],
+        through: ProductTag,
       },
     ]
   })
-  .then((tag) => {
-    res.json(tag);
+  .then((tagData) => {
+    res.json(tagData);
   })
   .catch((err) => {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   });
 });
 
 router.post('/', (req, res) => {
   // create a new tag
-  Tag.create(req.body.tag_name)
-  .then((tag) => {
-    res.json(tag);
+  Tag.create({
+    tag_name: req.body.tag_name,
+  })
+  .then((tagData) => {
+    res.json(tagData);
   })
   .catch((err) => {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   });
 });
 
@@ -69,8 +71,8 @@ router.put('/:id', (req, res) => {
         id: req.params.id,
       },
     })
-    .then((updatedTag) => {
-      res.json(updatedTag);
+    .then((tagData) => {
+      res.json(tagData);
     })
     .catch((err) => res.json(err));
 });

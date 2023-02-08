@@ -7,19 +7,14 @@ router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
   Category.findAll({
-    include: [
-      {
-        model: Product,
-        attributes: ['product_name', 'price', 'stock', 'category_id'],
-      },
-    ],
+    include: [Product],
   })
-    .then((categories) => {
-      res.json(categories);
+    .then((categoryData) => {
+      res.json(categoryData);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -30,20 +25,14 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id,
     },
-    attributes: ['id', 'category_name'],
-    include: [
-      {
-        model: Product,
-        attributes: ['product_name', 'price', 'stock', 'category_id'],
-      },
-    ]
+    include: [Product]
   })
-    .then((category) => {
-      res.json(category);
+    .then((categoryData) => {
+      res.json(categoryData);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -52,12 +41,12 @@ router.post('/', (req, res) => {
   Category.create({
     category_name: req.body.category_name,
   })
-    .then((category) => {
-      res.json(category);
+    .then((categoryData) => {
+      res.json(categoryData);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -72,16 +61,16 @@ router.put('/:id', (req, res) => {
         id: req.params.id,
       },
     })
-    .then((category) => {
-      if (!category) {
+    .then((categoryData) => {
+      if (!categoryData) {
         res.status(404).json({ message: 'No category found with this id' });
         return;
       }
-      res.json(category);
+      res.json(categoryData);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
@@ -92,16 +81,16 @@ router.delete('/:id', (req, res) => {
       id: req.params.id,
     },
   })
-  .then((category) => {
-    if (!category) {
+  .then((categoryData) => {
+    if (!categoryData) {
       res.status(404).json({ message: 'No category found with this id' });
       return;
     }
-    res.json(category);
+    res.json(categoryData);
   })
   .catch((err) => {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   });
 });
 
