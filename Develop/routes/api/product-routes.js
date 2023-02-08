@@ -8,10 +8,14 @@ router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
-    include: [Category,
+    include: [
+      {
+        model: Category,
+        attributes: ['id', 'category_name'],
+      },
       {
         model: Tag,
-        through: ProductTag,
+        attributes: ['id', 'tag_name'],
       },
     ],
   })
@@ -32,10 +36,14 @@ router.get('/:id', async (req, res) => {
     where: {
       id: req.params.id,
     },
-    include: [Category,
+    include: [
+      {
+        model: Category,
+        attributes: ['id', 'category_name'],
+      },
       {
         model: Tag,
-        through: ProductTag,
+        attributes: ['id', 'tag_name'],
       },
     ],
   })
@@ -80,11 +88,12 @@ router.post('/', (req, res) => {
 // update product
 router.put('/:id', (req, res) => {
   // update product data
-  Product.update(req.body, {
-    where: {
-      id: req.params.id,
-    },
-  })
+  Product.update(req.body,
+    {
+      where: {
+        id: req.params.id,
+      },
+    })
     .then((productData) => {
       // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });

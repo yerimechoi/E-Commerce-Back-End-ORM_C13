@@ -7,12 +7,11 @@ router.get('/', (req, res) => {
   // find all tags
   // be sure to include its associated Product data
   Tag.findAll({
-    include: [
-      {
-        model: Product,
-        through: ProductTag,
-      },
-    ],
+    include:
+    {
+      model: Product,
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
+    },
   })
     .then((tagData) => {
       res.json(tagData);
@@ -30,20 +29,18 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id,
     },
-    include: [
-      {
+    include: {
         model: Product,
-        through: ProductTag,
-      },
-    ]
+        attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
+    },
   })
-  .then((tagData) => {
-    res.json(tagData);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(400).json(err);
-  });
+    .then((tagData) => {
+      res.json(tagData);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 router.post('/', (req, res) => {
@@ -51,21 +48,18 @@ router.post('/', (req, res) => {
   Tag.create({
     tag_name: req.body.tag_name,
   })
-  .then((tagData) => {
-    res.json(tagData);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(400).json(err);
-  });
+    .then((tagData) => {
+      res.json(tagData);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
-  Tag.update(
-    {
-      tag_name: req.body.tag_name,
-    },
+  Tag.update(req.body,
     {
       where: {
         id: req.params.id,
